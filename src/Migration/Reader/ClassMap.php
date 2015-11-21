@@ -5,6 +5,7 @@
  */
 namespace Migration\Reader;
 
+use Magento\Framework\App\Arguments\ValidationState;
 use \Migration\Config;
 use \Migration\Exception;
 
@@ -62,7 +63,8 @@ class ClassMap
             throw new Exception('Invalid map filename: ' . $configFile);
         }
         $xml = file_get_contents($configFile);
-        $document = new \Magento\Framework\Config\Dom($xml);
+        $validation = new ValidationState(\Magento\Framework\App\State::MODE_DEVELOPER);
+        $document = new \Magento\Framework\Config\Dom($xml,$validation);
 
         if (!$document->validate($rootDir .'etc/' . self::CONFIGURATION_SCHEMA)) {
             throw new Exception('XML file is invalid.');

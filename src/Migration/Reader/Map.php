@@ -5,6 +5,7 @@
  */
 namespace Migration\Reader;
 
+use Magento\Framework\App\Arguments\ValidationState;
 use Migration\Exception;
 
 /**
@@ -76,7 +77,8 @@ class Map implements MapInterface
         }
 
         $xml = file_get_contents($configFile);
-        $document = new \Magento\Framework\Config\Dom($xml);
+        $validation = new ValidationState(\Magento\Framework\App\State::MODE_DEVELOPER);
+        $document = new \Magento\Framework\Config\Dom($xml,$validation);
 
         if (!$document->validate($this->getRootDir() .'etc/' . self::CONFIGURATION_SCHEMA)) {
             throw new Exception('XML file is invalid.');
